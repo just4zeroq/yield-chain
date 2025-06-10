@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInvestProfitMapper">
+    
+    <resultMap type="SysInvestProfit" id="SysInvestProfitResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="day"    column="day"    />
+        <result property="realProfit"    column="real_profit"    />
+        <result property="apy"    column="apy"    />
+    </resultMap>
+
+    <sql id="selectSysInvestProfitVo">
+        select id, order_id, day, real_profit, apy from sys_invest_profit
+    </sql>
+
+    <select id="selectSysInvestProfitList" parameterType="SysInvestProfit" resultMap="SysInvestProfitResult">
+        <include refid="selectSysInvestProfitVo"/>
+        <where>  
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="day != null "> and day = #{day}</if>
+            <if test="realProfit != null "> and real_profit = #{realProfit}</if>
+            <if test="apy != null "> and apy = #{apy}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysInvestProfitById" parameterType="Long" resultMap="SysInvestProfitResult">
+        <include refid="selectSysInvestProfitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysInvestProfit" parameterType="SysInvestProfit" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_invest_profit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="day != null">day,</if>
+            <if test="realProfit != null">real_profit,</if>
+            <if test="apy != null">apy,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="day != null">#{day},</if>
+            <if test="realProfit != null">#{realProfit},</if>
+            <if test="apy != null">#{apy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInvestProfit" parameterType="SysInvestProfit">
+        update sys_invest_profit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="day != null">day = #{day},</if>
+            <if test="realProfit != null">real_profit = #{realProfit},</if>
+            <if test="apy != null">apy = #{apy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysInvestProfitById" parameterType="Long">
+        delete from sys_invest_profit where id = #{id}
+    </delete>
+
+    <delete id="deleteSysInvestProfitByIds" parameterType="String">
+        delete from sys_invest_profit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getSysinvestProfits" resultMap="SysInvestProfitResult" >
+        <include refid="selectSysInvestProfitVo"/>
+        <where>
+            <if  test="orderIds != null  and orderIds != ''">  and order_id in
+                <foreach item="id" collection="orderIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="beginDate != null  ">
+                and day  &gt;= #{beginDate}
+            </if>
+            <if test="endDate != null  ">
+                and day &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
+</mapper>

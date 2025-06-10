@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInvestOrderMapper">
+    
+    <resultMap type="SysInvestOrder" id="SysInvestOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="buyerId"    column="buyer_id"    />
+        <result property="buyerWalletAddress"    column="buyer_wallet_address"    />
+        <result property="traderId"    column="trader_id"    />
+        <result property="traderWalletAddress"    column="trader_wallet_address"    />
+        <result property="orderTime"    column="order_time"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="orderAmount"    column="order_amount"    />
+        <result property="marginAmount"    column="margin_amount"    />
+        <result property="tokenSymbol"    column="token_symbol"    />
+        <result property="tokenDecimal"    column="token_decimal"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="buyerAddressChain"    column="buyer_address_chain"    />
+        <result property="traderAddressChain"    column="trader_address_chain"    />
+        <result property="productId"    column="product_id"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="orderConfig"    column="order_config"    />
+        <result property="orderEndtime"    column="order_endtime"    />
+        <result property="confirmProfit"    column="confirm_profit"    />
+        <result property="stakeTokenAmount"    column="stake_token_amount"    />
+    </resultMap>
+
+    <sql id="selectSysInvestOrderVo">
+        select id,order_id, buyer_id, buyer_wallet_address, trader_id, trader_wallet_address, order_time, order_status, order_amount, margin_amount,stake_token_amount, token_symbol, token_decimal, create_time, update_time, create_by, update_by, buyer_address_chain, trader_address_chain, product_id, order_type, order_config, order_endtime,confirm_profit from sys_invest_order
+    </sql>
+
+    <select id="selectSysInvestOrderList" parameterType="SysInvestOrder" resultMap="SysInvestOrderResult">
+        <include refid="selectSysInvestOrderVo"/>
+        <where>  
+            <if test="buyerId != null "> and buyer_id = #{buyerId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="buyerWalletAddress != null  and buyerWalletAddress != ''"> and buyer_wallet_address = #{buyerWalletAddress}</if>
+            <if test="traderId != null "> and trader_id = #{traderId}</if>
+            <if test="traderWalletAddress != null  and traderWalletAddress != ''"> and trader_wallet_address = #{traderWalletAddress}</if>
+            <if test="orderTime != null "> and order_time = #{orderTime}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="orderAmount != null "> and order_amount = #{orderAmount}</if>
+            <if test="marginAmount != null "> and margin_amount = #{marginAmount}</if>
+            <if test="tokenSymbol != null  and tokenSymbol != ''"> and token_symbol = #{tokenSymbol}</if>
+            <if test="tokenDecimal != null "> and token_decimal = #{tokenDecimal}</if>
+            <if test="buyerAddressChain != null  and buyerAddressChain != ''"> and buyer_address_chain = #{buyerAddressChain}</if>
+            <if test="traderAddressChain != null  and traderAddressChain != ''"> and trader_address_chain = #{traderAddressChain}</if>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="orderType != null "> and order_type = #{orderType}</if>
+            <if test="orderConfig != null  and orderConfig != ''"> and order_config = #{orderConfig}</if>
+            <if test="orderEndtime != null "> and order_endtime = #{orderEndtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysInvestOrderById" parameterType="Long" resultMap="SysInvestOrderResult">
+        <include refid="selectSysInvestOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysInvestOrder" parameterType="SysInvestOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_invest_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="buyerId != null">buyer_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="buyerWalletAddress != null">buyer_wallet_address,</if>
+            <if test="traderId != null">trader_id,</if>
+            <if test="traderWalletAddress != null">trader_wallet_address,</if>
+            <if test="orderTime != null">order_time,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="orderAmount != null">order_amount,</if>
+            <if test="marginAmount != null">margin_amount,</if>
+            <if test="tokenSymbol != null">token_symbol,</if>
+            <if test="tokenDecimal != null">token_decimal,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="buyerAddressChain != null">buyer_address_chain,</if>
+            <if test="traderAddressChain != null">trader_address_chain,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="orderType != null">order_type,</if>
+            <if test="orderConfig != null">order_config,</if>
+            <if test="orderEndtime != null">order_endtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="buyerId != null">#{buyerId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="buyerWalletAddress != null">#{buyerWalletAddress},</if>
+            <if test="traderId != null">#{traderId},</if>
+            <if test="traderWalletAddress != null">#{traderWalletAddress},</if>
+            <if test="orderTime != null">#{orderTime},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="orderAmount != null">#{orderAmount},</if>
+            <if test="marginAmount != null">#{marginAmount},</if>
+            <if test="tokenSymbol != null">#{tokenSymbol},</if>
+            <if test="tokenDecimal != null">#{tokenDecimal},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="buyerAddressChain != null">#{buyerAddressChain},</if>
+            <if test="traderAddressChain != null">#{traderAddressChain},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="orderType != null">#{orderType},</if>
+            <if test="orderConfig != null">#{orderConfig},</if>
+            <if test="orderEndtime != null">#{orderEndtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInvestOrder" parameterType="SysInvestOrder">
+        update sys_invest_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="buyerId != null">buyer_id = #{buyerId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="buyerWalletAddress != null">buyer_wallet_address = #{buyerWalletAddress},</if>
+            <if test="traderId != null">trader_id = #{traderId},</if>
+            <if test="traderWalletAddress != null">trader_wallet_address = #{traderWalletAddress},</if>
+            <if test="orderTime != null">order_time = #{orderTime},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="orderAmount != null">order_amount = #{orderAmount},</if>
+            <if test="marginAmount != null">margin_amount = #{marginAmount},</if>
+            <if test="tokenSymbol != null">token_symbol = #{tokenSymbol},</if>
+            <if test="tokenDecimal != null">token_decimal = #{tokenDecimal},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="buyerAddressChain != null">buyer_address_chain = #{buyerAddressChain},</if>
+            <if test="traderAddressChain != null">trader_address_chain = #{traderAddressChain},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="orderType != null">order_type = #{orderType},</if>
+            <if test="orderConfig != null">order_config = #{orderConfig},</if>
+            <if test="orderEndtime != null">order_endtime = #{orderEndtime},</if>
+            <if test="confirmProfit != null">confirm_profit = #{confirmProfit},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysInvestOrderById" parameterType="Long">
+        delete from sys_invest_order where id = #{id}
+    </delete>
+
+    <delete id="deleteSysInvestOrderByIds" parameterType="String">
+        delete from sys_invest_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysUserWalletMapper">
+    
+    <resultMap type="SysUserWallet" id="SysUserWalletResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="walletAddress"    column="wallet_address"    />
+        <result property="walletChain"    column="wallet_chain"    />
+        <result property="walletStatus"    column="wallet_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+    <resultMap id="UserWalletResult" type="com.ruoyi.system.domain.vo.UserWalletVo">
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="walletAddress"    column="wallet_address"    />
+        <result property="walletChain"    column="wallet_chain"    />
+        <result property="id"    column="id"    />
+    </resultMap>
+
+    <sql id="selectSysUserWalletVo">
+        select id, user_id, wallet_address, wallet_chain, wallet_status, create_time, update_time from sys_user_wallet
+    </sql>
+
+    <select id="selectSysUserWalletList" parameterType="SysUserWallet" resultMap="SysUserWalletResult">
+        <include refid="selectSysUserWalletVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="walletAddress != null  and walletAddress != ''"> and wallet_address = #{walletAddress}</if>
+            <if test="walletChain != null  and walletChain != ''"> and wallet_chain = #{walletChain}</if>
+            <if test="walletStatus != null "> and wallet_status = #{walletStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysUserWalletById" parameterType="Long" resultMap="SysUserWalletResult">
+        <include refid="selectSysUserWalletVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectSysUserWalletByRole"  resultMap="UserWalletResult">
+         SELECT
+             t2.user_name,
+             t2.user_id,
+             t1.wallet_address,
+             t1.id,
+             t1.wallet_chain
+         FROM sys_user_wallet t1
+         JOIN  sys_user t2 ON t1.user_id = t2.user_id
+         JOIN sys_user_role t3 ON t1.user_id = t3.user_id
+         WHERE t3.role_id = #{roleId}  AND t1.wallet_chain=#{chainCode} and t1.wallet_status=0
+    </select>
+
+    <insert id="insertSysUserWallet" parameterType="SysUserWallet" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_wallet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="walletAddress != null">wallet_address,</if>
+            <if test="walletChain != null">wallet_chain,</if>
+            <if test="walletStatus != null">wallet_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="walletAddress != null">#{walletAddress},</if>
+            <if test="walletChain != null">#{walletChain},</if>
+            <if test="walletStatus != null">#{walletStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUserWallet" parameterType="SysUserWallet">
+        update sys_user_wallet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="walletAddress != null">wallet_address = #{walletAddress},</if>
+            <if test="walletChain != null">wallet_chain = #{walletChain},</if>
+            <if test="walletStatus != null">wallet_status = #{walletStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUserWalletById" parameterType="Long">
+        delete from sys_user_wallet where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUserWalletByIds" parameterType="String">
+        delete from sys_user_wallet where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

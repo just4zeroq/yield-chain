@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInvestOrderSubStepMapper">
+    
+    <resultMap type="SysInvestOrderSubStep" id="SysInvestOrderSubStepResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="stepId"    column="step_id"    />
+        <result property="orderSubStep"    column="order_sub_step"    />
+        <result property="orderSubStepStatus"    column="order_sub_step_status"    />
+        <result property="orderSubStepCode"    column="order_sub_step_code"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="subStepConfig"    column="sub_step_config"    />
+    </resultMap>
+
+    <sql id="selectSysInvestOrderSubStepVo">
+        select id, order_id, step_id, order_sub_step, order_sub_step_status, order_sub_step_code, create_time, update_time, created_by, update_by, sub_step_config from sys_invest_order_sub_step
+    </sql>
+
+    <select id="selectSysInvestOrderSubStepList" parameterType="SysInvestOrderSubStep" resultMap="SysInvestOrderSubStepResult">
+        <include refid="selectSysInvestOrderSubStepVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="stepId != null "> and step_id = #{stepId}</if>
+            <if test="orderSubStep != null "> and order_sub_step = #{orderSubStep}</if>
+            <if test="orderSubStepStatus != null "> and order_sub_step_status = #{orderSubStepStatus}</if>
+            <if test="orderSubStepCode != null  and orderSubStepCode != ''"> and order_sub_step_code = #{orderSubStepCode}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="subStepConfig != null  and subStepConfig != ''"> and sub_step_config = #{subStepConfig}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysInvestOrderSubStepById" parameterType="Long" resultMap="SysInvestOrderSubStepResult">
+        <include refid="selectSysInvestOrderSubStepVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysInvestOrderSubStep" parameterType="SysInvestOrderSubStep" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_invest_order_sub_step
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="stepId != null">step_id,</if>
+            <if test="orderSubStep != null">order_sub_step,</if>
+            <if test="orderSubStepStatus != null">order_sub_step_status,</if>
+            <if test="orderSubStepCode != null">order_sub_step_code,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="subStepConfig != null">sub_step_config,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="stepId != null">#{stepId},</if>
+            <if test="orderSubStep != null">#{orderSubStep},</if>
+            <if test="orderSubStepStatus != null">#{orderSubStepStatus},</if>
+            <if test="orderSubStepCode != null">#{orderSubStepCode},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="subStepConfig != null">#{subStepConfig},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInvestOrderSubStep" parameterType="SysInvestOrderSubStep">
+        update sys_invest_order_sub_step
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="stepId != null">step_id = #{stepId},</if>
+            <if test="orderSubStep != null">order_sub_step = #{orderSubStep},</if>
+            <if test="orderSubStepStatus != null">order_sub_step_status = #{orderSubStepStatus},</if>
+            <if test="orderSubStepCode != null">order_sub_step_code = #{orderSubStepCode},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="subStepConfig != null">sub_step_config = #{subStepConfig},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysInvestOrderSubStepById" parameterType="Long">
+        delete from sys_invest_order_sub_step where id = #{id}
+    </delete>
+
+    <delete id="deleteSysInvestOrderSubStepByIds" parameterType="String">
+        delete from sys_invest_order_sub_step where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInvestStatMapper">
+    
+    <resultMap type="SysInvestStat" id="SysInvestStatResult">
+        <result property="id"    column="id"    />
+        <result property="statTypeCode"    column="stat_type_code"    />
+        <result property="day"    column="day"    />
+    </resultMap>
+
+    <sql id="selectSysInvestStatVo">
+        select id, stat_type_code, day from sys_invest_stat
+    </sql>
+
+    <select id="selectSysInvestStatList" parameterType="SysInvestStat" resultMap="SysInvestStatResult">
+        <include refid="selectSysInvestStatVo"/>
+        <where>  
+            <if test="statTypeCode != null  and statTypeCode != ''"> and stat_type_code = #{statTypeCode}</if>
+            <if test="day != null "> and day = #{day}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysInvestStatById" parameterType="Long" resultMap="SysInvestStatResult">
+        <include refid="selectSysInvestStatVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysInvestStat" parameterType="SysInvestStat" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_invest_stat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statTypeCode != null">stat_type_code,</if>
+            <if test="day != null">day,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statTypeCode != null">#{statTypeCode},</if>
+            <if test="day != null">#{day},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInvestStat" parameterType="SysInvestStat">
+        update sys_invest_stat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="statTypeCode != null">stat_type_code = #{statTypeCode},</if>
+            <if test="day != null">day = #{day},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysInvestStatById" parameterType="Long">
+        delete from sys_invest_stat where id = #{id}
+    </delete>
+
+    <delete id="deleteSysInvestStatByIds" parameterType="String">
+        delete from sys_invest_stat where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

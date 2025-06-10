@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInvestOrderStepMapper">
+    
+    <resultMap type="SysInvestOrderStep" id="SysInvestOrderStepResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="orderStep"    column="order_step"    />
+        <result property="orderStepStatus"    column="order_step_status"    />
+        <result property="orderStepCode"    column="order_step_code"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="stepConfig"    column="step_config"    />
+        <result property="stepMode"    column="step_mode"    />
+        <result property="stepValue"    column="step_value"    />
+        <result property="stepValueType"    column="step_value_type"    />
+    </resultMap>
+
+    <sql id="selectSysInvestOrderStepVo">
+        select id, order_id, order_step, order_step_status, order_step_code, create_time, update_time, created_by, update_by, step_config, step_mode, step_value, step_value_type from sys_invest_order_step
+    </sql>
+
+    <select id="selectSysInvestOrderStepList" parameterType="SysInvestOrderStep" resultMap="SysInvestOrderStepResult">
+        <include refid="selectSysInvestOrderStepVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="orderStep != null "> and order_step = #{orderStep}</if>
+            <if test="orderStepStatus != null "> and order_step_status = #{orderStepStatus}</if>
+            <if test="orderStepCode != null  and orderStepCode != ''"> and order_step_code = #{orderStepCode}</if>
+            <if test="createdBy != null "> and created_by = #{createdBy}</if>
+            <if test="stepConfig != null  and stepConfig != ''"> and step_config = #{stepConfig}</if>
+            <if test="stepMode != null  and stepMode != ''"> and step_mode = #{stepMode}</if>
+            <if test="stepValue != null  and stepValue != ''"> and step_value = #{stepValue}</if>
+            <if test="stepValueType != null  and stepValueType != ''"> and step_value_type = #{stepValueType}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysInvestOrderStepById" parameterType="Long" resultMap="SysInvestOrderStepResult">
+        <include refid="selectSysInvestOrderStepVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysInvestOrderStep" parameterType="SysInvestOrderStep" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_invest_order_step
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="orderStep != null">order_step,</if>
+            <if test="orderStepStatus != null">order_step_status,</if>
+            <if test="orderStepCode != null">order_step_code,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="stepConfig != null">step_config,</if>
+            <if test="stepMode != null">step_mode,</if>
+            <if test="stepValue != null">step_value,</if>
+            <if test="stepValueType != null">step_value_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="orderStep != null">#{orderStep},</if>
+            <if test="orderStepStatus != null">#{orderStepStatus},</if>
+            <if test="orderStepCode != null">#{orderStepCode},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="stepConfig != null">#{stepConfig},</if>
+            <if test="stepMode != null">#{stepMode},</if>
+            <if test="stepValue != null">#{stepValue},</if>
+            <if test="stepValueType != null">#{stepValueType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInvestOrderStep" parameterType="SysInvestOrderStep">
+        update sys_invest_order_step
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="orderStep != null">order_step = #{orderStep},</if>
+            <if test="orderStepStatus != null">order_step_status = #{orderStepStatus},</if>
+            <if test="orderStepCode != null">order_step_code = #{orderStepCode},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="stepConfig != null">step_config = #{stepConfig},</if>
+            <if test="stepMode != null">step_mode = #{stepMode},</if>
+            <if test="stepValue != null">step_value = #{stepValue},</if>
+            <if test="stepValueType != null">step_value_type = #{stepValueType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysInvestOrderStepById" parameterType="Long">
+        delete from sys_invest_order_step where id = #{id}
+    </delete>
+
+    <delete id="deleteSysInvestOrderStepByIds" parameterType="String">
+        delete from sys_invest_order_step where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!-- 新增插入 list 的定义 -->
+    <insert id="insertSysInvestOrderStepList" parameterType="java.util.List">
+        insert into sys_invest_order_step
+        (order_id, order_step, order_step_status, order_step_code, create_time, update_time, created_by, update_by, step_config, step_mode, step_value, step_value_type)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.orderId},
+            #{item.orderStep},
+            #{item.orderStepStatus},
+            #{item.orderStepCode},
+            #{item.createTime},
+            #{item.updateTime},
+            #{item.createdBy},
+            #{item.updateBy},
+            #{item.stepConfig},
+            #{item.stepMode},
+            #{item.stepValue},
+            #{item.stepValueType}
+            )
+        </foreach>
+    </insert>
+</mapper>
+
