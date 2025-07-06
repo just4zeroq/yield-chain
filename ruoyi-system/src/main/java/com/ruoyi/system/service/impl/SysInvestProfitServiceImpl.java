@@ -96,4 +96,9 @@ public class SysInvestProfitServiceImpl implements ISysInvestProfitService
     public List<SysInvestProfit> selectSysInvestProfitListByOrder(List<String> orderIds, Date beginDate,Date ednDate) {
         return  sysInvestProfitMapper.getSysinvestProfits(orderIds,beginDate,ednDate);
     }
+
+    @Override
+    public Double getTotalAmountByOrder(List<String> orderIds,Date endDay) {
+        return sysInvestProfitMapper.getTotalAmountByOrder(orderIds,endDay);
+    }
 }

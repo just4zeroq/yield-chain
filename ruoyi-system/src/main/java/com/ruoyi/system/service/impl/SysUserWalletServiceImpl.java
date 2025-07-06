@@ -2,7 +2,6 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.system.domain.vo.UserWalletVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.SysUserWalletMapper;
@@ -10,22 +9,22 @@ import com.ruoyi.system.domain.SysUserWallet;
 import com.ruoyi.system.service.ISysUserWalletService;
 
 /**
- * 【请填写功能名称】Service业务层处理
- * 
+ * 钱包管理Service业务层处理
+ *
  * @author ruoyi
- * @date 2025-05-10
+ * @date 2025-06-14
  */
 @Service
-public class SysUserWalletServiceImpl implements ISysUserWalletService 
+public class SysUserWalletServiceImpl implements ISysUserWalletService
 {
     @Autowired
     private SysUserWalletMapper sysUserWalletMapper;
 
     /**
-     * 查询【请填写功能名称】
-     * 
-     * @param id 【请填写功能名称】主键
-     * @return 【请填写功能名称】
+     * 查询钱包管理
+     *
+     * @param id 钱包管理主键
+     * @return 钱包管理
      */
     @Override
     public SysUserWallet selectSysUserWalletById(Long id)
@@ -34,10 +33,10 @@ public class SysUserWalletServiceImpl implements ISysUserWalletService
     }
 
     /**
-     * 查询【请填写功能名称】列表
-     * 
-     * @param sysUserWallet 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * 查询钱包管理列表
+     *
+     * @param sysUserWallet 钱包管理
+     * @return 钱包管理
      */
     @Override
     public List<SysUserWallet> selectSysUserWalletList(SysUserWallet sysUserWallet)
@@ -46,9 +45,9 @@ public class SysUserWalletServiceImpl implements ISysUserWalletService
     }
 
     /**
-     * 新增【请填写功能名称】
-     * 
-     * @param sysUserWallet 【请填写功能名称】
+     * 新增钱包管理
+     *
+     * @param sysUserWallet 钱包管理
      * @return 结果
      */
     @Override
@@ -59,9 +58,9 @@ public class SysUserWalletServiceImpl implements ISysUserWalletService
     }
 
     /**
-     * 修改【请填写功能名称】
-     * 
-     * @param sysUserWallet 【请填写功能名称】
+     * 修改钱包管理
+     *
+     * @param sysUserWallet 钱包管理
      * @return 结果
      */
     @Override
@@ -72,9 +71,9 @@ public class SysUserWalletServiceImpl implements ISysUserWalletService
     }
 
     /**
-     * 批量删除【请填写功能名称】
-     * 
-     * @param ids 需要删除的【请填写功能名称】主键
+     * 批量删除钱包管理
+     *
+     * @param ids 需要删除的钱包管理主键
      * @return 结果
      */
     @Override
@@ -84,19 +83,14 @@ public class SysUserWalletServiceImpl implements ISysUserWalletService
     }
 
     /**
-     * 删除【请填写功能名称】信息
-     * 
-     * @param id 【请填写功能名称】主键
+     * 删除钱包管理信息
+     *
+     * @param id 钱包管理主键
      * @return 结果
      */
     @Override
     public int deleteSysUserWalletById(Long id)
     {
         return sysUserWalletMapper.deleteSysUserWalletById(id);
-    }
-
-    @Override
-    public List<UserWalletVo> selectSysUserWalletByRole(Long roleId, String chainCode) {
-        return sysUserWalletMapper.selectSysUserWalletByRole(roleId,chainCode);
     }
 }

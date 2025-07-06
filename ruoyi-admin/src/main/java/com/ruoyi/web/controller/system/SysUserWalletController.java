@@ -1,9 +1,21 @@
 package com.ruoyi.web.controller.system;
+
+import java.io.IOException;
 import java.util.List;
+
+import com.ruoyi.common.utils.BinanceUtil;
+import com.ruoyi.system.domain.dto.WalletBalanceParamDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -15,9 +27,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 钱包管理Controller
- * 
+ *
  * @author ruoyi
- * @date 2025-05-10
+ * @date 2025-06-14
  */
 @RestController
 @RequestMapping("/system/wallet")
@@ -88,22 +100,50 @@ public class SysUserWalletController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:wallet:remove')")
     @Log(title = "钱包管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(sysUserWalletService.deleteSysUserWalletByIds(ids));
     }
+
     /**
      * 获取钱包管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:wallet:query')")
-    @GetMapping("/list_by_role")
-    public AjaxResult getWalletsByRoleId(@RequestParam(name="roleId")Long roleId, @RequestParam(name="chainCode")String chainCode)
-    {
-        long roleCode = 100L;
-        if(roleId==1){
-            roleCode =101L;
+    @GetMapping(value = "/get_wallet_balance")
+    public AjaxResult getWalletBalance(WalletBalanceParamDTO walletBalanceParamDTO ) throws IOException {
+        SysUserWallet sysUserWallet = new SysUserWallet();
+        sysUserWallet.setUserId(walletBalanceParamDTO.getUserId());
+        sysUserWallet.setWalletAddress(walletBalanceParamDTO.getWalletAddress());
+        sysUserWallet.setWalletStatus(0);
+        List<SysUserWallet>  wallets = sysUserWalletService.selectSysUserWalletList(sysUserWallet);
+
+        if(wallets.size()==0){
+            return AjaxResult.error("钱包不存在");
+        }else{
+            SysUserWallet wallet = wallets.get(0);
+            BinanceUtil b = new BinanceUtil(wallet.getApiKey());
+           Double e = b.getBalance(walletBalanceParamDTO.getSignedParam(),walletBalanceParamDTO.getSymbol());
+           return success(e);
         }
-        return success(sysUserWalletService.selectSysUserWalletByRole(roleCode,chainCode));
+//        return success("e");
     }
+    @PostMapping (value = "/buy_symbol")
+    public AjaxResult buySymbol(@RequestBody  WalletBalanceParamDTO walletBalanceParamDTO ) throws IOException {
+        SysUserWallet sysUserWallet = new SysUserWallet();
+        sysUserWallet.setUserId(walletBalanceParamDTO.getUserId());
+        sysUserWallet.setWalletAddress(walletBalanceParamDTO.getWalletAddress());
+        sysUserWallet.setWalletStatus(0);
+        List<SysUserWallet>  wallets = sysUserWalletService.selectSysUserWalletList(sysUserWallet);
+
+        if(wallets.size()==0){
+            return AjaxResult.error("钱包不存在");
+        }else{
+            SysUserWallet wallet = wallets.get(0);
+            BinanceUtil tradeClient = new BinanceUtil(wallet.getApiKey());
+            tradeClient.buySymbol(walletBalanceParamDTO.getSignedParam());
+            return success("2");
+        }
+//        return success("e");
+    }
+
 }

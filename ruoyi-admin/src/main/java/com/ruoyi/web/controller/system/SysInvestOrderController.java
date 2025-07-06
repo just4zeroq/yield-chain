@@ -216,7 +216,7 @@ public class SysInvestOrderController extends BaseController
      * 投资信息查询
      * @return
      */
-    @PreAuthorize("@ss.hasPermi('system:order:list')")
+//    @PreAuthorize("@ss.hasPermi('system:order:list')")
     @GetMapping(value = "/invest_summary")
     public AjaxResult getAllInvestInfo(SysInvestOrder sysInvestOrder) {
         AjaxResult ajax = AjaxResult.success();

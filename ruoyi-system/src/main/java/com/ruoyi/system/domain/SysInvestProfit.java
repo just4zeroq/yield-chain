@@ -31,13 +31,23 @@ public class SysInvestProfit extends BaseEntity
 
     /** 实际收入 */
     @Excel(name = "实际收入")
-    private Long realProfit;
+    private Double realProfit;
 
     /** 当天年化 */
     @Excel(name = "当天年化")
-    private Long apy;
+    private Double apy;
 
-    public void setId(Long id) 
+    private Double totalAmount;
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
@@ -67,22 +77,22 @@ public class SysInvestProfit extends BaseEntity
         return day;
     }
 
-    public void setRealProfit(Long realProfit) 
+    public void setRealProfit(Double realProfit)
     {
         this.realProfit = realProfit;
     }
 
-    public Long getRealProfit() 
+    public Double getRealProfit()
     {
         return realProfit;
     }
 
-    public void setApy(Long apy) 
+    public void setApy(Double apy)
     {
         this.apy = apy;
     }
 
-    public Long getApy() 
+    public Double getApy()
     {
         return apy;
     }

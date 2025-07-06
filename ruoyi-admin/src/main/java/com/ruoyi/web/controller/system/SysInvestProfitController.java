@@ -1,11 +1,11 @@
 package com.ruoyi.web.controller.system;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.OrderStatus;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.domain.SysInvestOrder;
 import com.ruoyi.system.domain.SysInvestStat;
 import com.ruoyi.system.service.ISysInvestOrderService;
@@ -119,15 +119,15 @@ public class SysInvestProfitController extends BaseController
     /**
      * 查询最新的收益记录
      */
-    @PreAuthorize("@ss.hasPermi('system:profit:list')")
+//    @PreAuthorize("@ss.hasPermi('system:profit:list')")
     @GetMapping("/latest_profit")
     public AjaxResult get_latest_profit()
     {
         AjaxResult ajaxResult=AjaxResult.success();
-        SysInvestStat sysInvestStat = new SysInvestStat();
-        sysInvestStat.setStatTypeCode("profit");
-        List<SysInvestStat> sysInvestStats =   sysInvestStatService.selectSysInvestStatList(sysInvestStat);
-        Date statDay = sysInvestStats.get(0).getDay();
+//        SysInvestStat sysInvestStat = new SysInvestStat();
+//        sysInvestStat.setStatTypeCode("profit");
+//        List<SysInvestStat> sysInvestStats =   sysInvestStatService.selectSysInvestStatList(sysInvestStat);
+        Date statDay = new Date();
         SysInvestOrder sysInvestOrder = new SysInvestOrder();
         LoginUser user = getLoginUser();
         if(user.getUser().isInvestor()){
@@ -137,18 +137,46 @@ public class SysInvestProfitController extends BaseController
         }
         List<SysInvestOrder> list = sysInvestOrderService.selectSysInvestOrderList(sysInvestOrder);
         List<String> orderIds = new ArrayList<>();
+        double totalAmount = 0;
+        double unconfirmedTotalAmount = 0;
         for(SysInvestOrder o:list){
-            if(o.getOrderStatus()!=7){
+            totalAmount += o.getOrderAmount();
+            if(o.getOrderStatus()!= OrderStatus.FARM.getCode()){
                 orderIds.add(o.getOrderId());
             }
+            if(o.getOrderStatus() < OrderStatus.YIELD.getCode()){
+                unconfirmedTotalAmount +=o.getOrderAmount();
+            }
         }
-
-        Date beginDate = new Date(statDay.getTime() - 6 * 24 * 60 * 60 * 1000);
-        List<SysInvestProfit> sysInvestProfits = sysInvestProfitService.selectSysInvestProfitListByOrder(orderIds,beginDate,statDay);
-        ajaxResult.put(AjaxResult.DATA_TAG,sysInvestProfits);
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = sdf.format(statDay);
-        ajaxResult.put("day",formattedDate);
+       //ALTER TABLE ry.sys_invest_profit ADD total_amount DOUBLE NULL;
+        Date beginDate = DateUtils.before(statDay,30);
+        List<SysInvestProfit> sysInvestProfits = sysInvestProfitService.selectSysInvestProfitListByOrder(orderIds,null,statDay);
+        List<SysInvestProfit> sysInvestProfitArrays = new ArrayList<>();
+        Map<String,Double> totalProfits = new HashMap<>();
+        Map<String,Double> amount = new HashMap<>();
+        for(SysInvestProfit s : sysInvestProfits){
+            if(s.getDay().after(beginDate) ){
+                sysInvestProfitArrays.add(s);
+            }
+            totalProfits.compute(s.getDay().toString(),(k,v)->v==null?s.getRealProfit():v+s.getRealProfit());
+            amount.compute(s.getDay().toString(),(k,v)->v==null?s.getTotalAmount():v+s.getTotalAmount());
+        }
+        ajaxResult.put(AjaxResult.DATA_TAG,sysInvestProfitArrays);
+        double sum = 0.0;
+        Double profits =0.0;
+        for( Map.Entry<String,Double> k:totalProfits.entrySet()){
+           String day = k.getKey();
+           Double p = k.getValue();
+           Double a = amount.get(day);
+            profits += p;
+           sum += p/a;
+    }
+        Double avgApy = sum/totalProfits.size()*360*100;
+//        double profits = sysInvestProfitService.getTotalAmountByOrder(orderIds,statDay);
+        ajaxResult.put("totalAmount",totalAmount);
+        ajaxResult.put("unconfirmedTotalAmount",unconfirmedTotalAmount);
+        ajaxResult.put("profits",profits);
+        ajaxResult.put("avgApy",avgApy);
         return ajaxResult;
     }
 }

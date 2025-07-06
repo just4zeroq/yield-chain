@@ -67,4 +67,14 @@ public interface ISysInvestProfitService
      * @return 实际收益信息记录集合
      */
     public List<SysInvestProfit> selectSysInvestProfitListByOrder(List<String> orderIds,Date beginDate, Date endDate);
+
+
+    /**
+     * 查询订单总收益
+     *
+     * 实际收益信息记录
+     * @return 实际收益信息记录集合
+     */
+    public Double getTotalAmountByOrder(List<String> orderIds,Date endDay);
+
 }

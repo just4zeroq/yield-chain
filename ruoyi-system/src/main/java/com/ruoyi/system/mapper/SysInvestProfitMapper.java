@@ -63,4 +63,5 @@ public interface SysInvestProfitMapper
 
     public List<SysInvestProfit> getSysinvestProfits(@Param("orderIds")List<String> orderIds, @Param("beginDate")Date beginDate, @Param("endDate")Date endDate);
 
+    public Double getTotalAmountByOrder(@Param("orderIds") List<String> orderIds, @Param("endDate")Date endDate);
 }

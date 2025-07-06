@@ -10,10 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="day"    column="day"    />
         <result property="realProfit"    column="real_profit"    />
         <result property="apy"    column="apy"    />
+        <result property="totalAmount"    column="total_amount"    />
     </resultMap>
 
     <sql id="selectSysInvestProfitVo">
-        select id, order_id, day, real_profit, apy from sys_invest_profit
+        select id, order_id, day, real_profit, apy,total_amount from sys_invest_profit
     </sql>
 
     <select id="selectSysInvestProfitList" parameterType="SysInvestProfit" resultMap="SysInvestProfitResult">
@@ -71,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getSysinvestProfits" resultMap="SysInvestProfitResult" >
         <include refid="selectSysInvestProfitVo"/>
         <where>
-            <if  test="orderIds != null  and orderIds != ''">  and order_id in
+            <if  test="orderIds != null  and orderIds != '' and orderIds.size()>0">  and order_id in
                 <foreach item="id" collection="orderIds" open="(" separator="," close=")">
                     #{id}
                 </foreach>
@@ -84,4 +85,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
         </where>
     </select>
+
+    <select id="getTotalAmountByOrder" resultType="Double" >
+        SELECT  SUM(real_profit),SUM()  FROM  sys_invest_profit
+        <where>
+            <if  test="orderIds != null  and orderIds != '' and orderIds.size()>0">  and order_id in
+                <foreach item="id" collection="orderIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="endDate != null  ">
+                and day &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>
